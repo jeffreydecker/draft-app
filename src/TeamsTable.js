@@ -2,13 +2,9 @@ import React, { Component } from 'react';
 import PlayersDialog from './PlayerDialog'
 import Table from 'react-bootstrap/Table'
 
-const columns = {
-    rankings: ['#', 'Name', 'Positions', 'Team'],
-    hitting: [],
-    pitching: [],
-};
+const columns = ['Name', '$ Spent', '$ Left', 'Picks Left', 'Max Bid'];
 
-class PlayersTable extends Component {
+class TeamsTable extends Component {
     state = {
         league: null,
         dialogOpen: false,
@@ -34,34 +30,25 @@ class PlayersTable extends Component {
     }
 
     render() {
-        var playerData = [];
-
-        if (this.state.league) {
-            this.state.league.players.map(player => {
-                var rank = player._player.rank
-                if (rank == Number.MAX_SAFE_INTEGER) { rank = 'NA' }
-                playerData.push({id: player._id, rank: rank, name: player._player.name, pos: player._player.pos, team: player._player.team})
-            })
-        }
-
         return (
             <div>
                 <Table responsive="sm" striped hover>
                     <thead>
                         <tr>
-                            {columns.rankings.map(title => (
-                                <th>{title}</th>
+                            {columns.map((title, index) => (
+                                <th align={index > 0 ? "right" : "left"}>{title}</th>
                             ))}
                         </tr>
                     </thead>
                     <tbody>
                         {this.state.league ? 
-                            this.state.league.players.map(player => (
-                                <tr key={player._id} onClick={event => this.handlePlayerClick(event, player._id)}>
-                                    <td component="th" scope="row">{player._player.rank == Number.MAX_SAFE_INTEGER ? 'NA' : player._player.rank}</td>
-                                    <td align="right">{player._player.name}</td>
-                                    <td align="right">{player._player.pos}</td>
-                                    <td align="right">{player._player.team}</td>
+                            this.state.league.teams.map(team => (
+                                <tr key={team._id} onClick={event => this.handlePlayerClick(event, team._id)}>
+                                    <td component="th" scope="row">{team.name}</td>
+                                    <td align="right">0 of {this.state.league.budget}</td>
+                                    <td align="right">{this.state.league.budget} of {this.state.league.budget}</td>
+                                    <td align="right">{this.state.league.rosterSize - team.players.length}</td>
+                                    <td align="right">?</td>
                                 </tr>
                             ))
                             : <div>Loading</div>
@@ -74,4 +61,4 @@ class PlayersTable extends Component {
     }
 }
  
-export default PlayersTable;
+export default TeamsTable;
