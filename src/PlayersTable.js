@@ -14,6 +14,12 @@ class PlayersTable extends Component {
         dialogOpen: false,
     };
 
+    constructor(props) {
+        super(props);
+        this.handlePlayerClick = this.handlePlayerClick.bind(this);
+        this.handleDialogClose = this.handleDialogClose.bind(this);
+    }
+
     handlePlayerClick = (event, id) => {
         this.setState({dialogOpen: true})
     }

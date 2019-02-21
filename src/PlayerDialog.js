@@ -4,6 +4,11 @@ import Button from 'react-bootstrap/Button'
 
 class ResponsiveDialog extends React.Component {
 
+  constructor(props) {
+    super(props);
+    this.handleClose = this.handleClose.bind(this);
+  }  
+
   handleClose = () => {
     this.props.onClose();
   };
