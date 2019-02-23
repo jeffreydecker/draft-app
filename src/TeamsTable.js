@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PlayersDialog from './PlayerDialog'
 import Table from 'react-bootstrap/Table'
+import Container from 'react-bootstrap/Container'
 
 const columns = ['Name', '$ Spent', '$ Left', 'Picks Left', 'Max Bid'];
 
@@ -37,12 +38,12 @@ class TeamsTable extends Component {
 
     render() {
         return (
-            <div>
-                <Table responsive="sm" striped hover>
+            <Container>
+                <Table responsive="sm" size="sm" striped hover>
                     <thead>
                         <tr>
                             {columns.map((title, index) => (
-                                <th align={index > 0 ? "right" : "left"}>{title}</th>
+                                <th>{title}</th>
                             ))}
                         </tr>
                     </thead>
@@ -51,10 +52,10 @@ class TeamsTable extends Component {
                             this.props.league.teams.map(team => (
                                 <tr key={team._id} team-id={team._id} onClick={this.handlePlayerClick}>
                                     <td component="th" scope="row">{team.name}</td>
-                                    <td align="right">0 of {this.props.league.budget}</td>
-                                    <td align="right">{this.props.league.budget} of {this.props.league.budget}</td>
-                                    <td align="right">{this.props.league.rosterSize - team.players.length}</td>
-                                    <td align="right">?</td>
+                                    <td>0 of {this.props.league.budget}</td>
+                                    <td>{this.props.league.budget} of {this.props.league.budget}</td>
+                                    <td>{this.props.league.rosterSize - team.players.length}</td>
+                                    <td>?</td>
                                 </tr>
                             ))
                             : <div>Loading</div>
@@ -62,7 +63,7 @@ class TeamsTable extends Component {
                     </tbody>
                 </Table>
                 <PlayersDialog open={this.state.dialogOpen} onClose={this.handleDialogClose}/>
-            </div>
+            </Container>
         );
     }
 }

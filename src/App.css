@@ -31,3 +31,15 @@
     transform: rotate(360deg);
   }
 }
+
+th:nth-of-type(1) {
+  text-align: left;
+}
+
+td:nth-of-type(1) {
+  text-align: left;
+}
+
+.center-container {
+  padding: .5rem 1rem;
+}
