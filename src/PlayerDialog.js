@@ -6,6 +6,7 @@ import Col from 'react-bootstrap/Col'
 import FormControl from 'react-bootstrap/FormControl'
 import InputGroup from 'react-bootstrap/InputGroup'
 import DollarSign from 'react-feather/dist/icons/dollar-sign';
+import { PlayerTable, DisplayTypeEnum, columns } from './PlayerTable'
 
 class ResponsiveDialog extends React.Component {
 
@@ -14,6 +15,7 @@ class ResponsiveDialog extends React.Component {
     this.handleClose = this.handleClose.bind(this);
     this.handleDraftDrop = this.handleDraftDrop.bind(this);
     this.onTeamSelect = this.onTeamSelect.bind(this);
+    this.handlePlayerClick = this.handlePlayerClick.bind(this);
   }  
 
   handleClose = () => {
@@ -28,8 +30,21 @@ class ResponsiveDialog extends React.Component {
     console.log(`Team Selected: ${teamId}`)
   }
 
+  handlePlayerClick = (player) => {}
+
   render() {
     let player = this.props.player
+
+    var hittingTable
+    if (player && player._player.hittingProjections) { 
+      hittingTable = <PlayerTable cols={columns.hitting} players={[player]} displayType={DisplayTypeEnum.Hitting} handlePlayerClick={this.handlePlayerClick} /> 
+    }
+          
+    var pitchingTable
+    if (player && player._player.pitchingProjections) { 
+      pitchingTable = <PlayerTable cols={columns.pitching} players={[player]} displayType={DisplayTypeEnum.Pitching} handlePlayerClick={this.handlePlayerClick} /> 
+    }
+
     if (this.props.player) {
       return (      
         <Modal centered show={this.props.open} onHide={this.handleClose}>
@@ -37,6 +52,8 @@ class ResponsiveDialog extends React.Component {
             <Modal.Title>{this.props.player._player.name}</Modal.Title>
           </Modal.Header>
           <Modal.Body>
+          {hittingTable}
+          {pitchingTable}
           <Form>
           <Form.Row>
             <Col>

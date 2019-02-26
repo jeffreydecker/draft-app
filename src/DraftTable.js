@@ -10,9 +10,7 @@ import Container from 'react-bootstrap/Container'
 import Col from 'react-bootstrap/Col'
 import Row from 'react-bootstrap/Row'
 import Search from 'react-feather/dist/icons/search';
-import RankingRow from './RankingRow'
-import HitterRow from './HitterRow';
-import PitcherRow from './PitcherRow';
+import PlayerTable from './PlayerTable'
 
 const columns = {
     rankings:   ['#', 'Name', 'Positions', 'Team'],
@@ -26,7 +24,7 @@ const positions = {
     outfield:   ['OF', 'CF', 'LF', 'RF'],
 }
 
-let DisplayTypeEnum = {
+const DisplayTypeEnum = {
     Ranking:    1,
     Hitting:    2,
     Pitching:   3,
@@ -77,7 +75,7 @@ class PlayersTable extends Component {
         // TODO - Add pagination and show stats when pos filter selected
 
         var displayType = DisplayTypeEnum.Ranking
-        var players = null
+        var players = []
         var cols = columns.rankings;
 
         // TODO - When filtering by position, update ranking to reflect ranking within that position
@@ -175,29 +173,7 @@ class PlayersTable extends Component {
                     </Col>
                 </Row>            
                 
-                <Table responsive="sm" size="sm" striped hover>
-                    <thead>
-                        <tr>
-                            {cols.map(title => (
-                                <th>{title}</th>
-                            ))}
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {players ? 
-                            players.map(player => {
-                                if (displayType == DisplayTypeEnum.Hitting) {
-                                    return <HitterRow player={player} handlePlayerClick={this.handlePlayerClick} />
-                                } else if (displayType == DisplayTypeEnum.Pitching) {
-                                    return <PitcherRow player={player} handlePlayerClick={this.handlePlayerClick} />
-                                } else {
-                                    return <RankingRow player={player} handlePlayerClick={this.handlePlayerClick} />
-                                }
-                            })
-                            : <div>Loading</div>
-                        }
-                    </tbody>
-                </Table>
+                <PlayerTable cols={cols} players={players} displayType={displayType} handlePlayerClick={this.handlePlayerClick} />
 
                 <PlayersDialog 
                 open={this.state.dialogOpen} 

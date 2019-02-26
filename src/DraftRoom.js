@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import PlayersTable from './PlayersTable'
+import DraftTable from './DraftTable'
 import TeamsTable from './TeamsTable'
 
 const columns = {
@@ -28,7 +28,7 @@ class DraftRoom extends Component {
         return (
             <div>
                 <TeamsTable league={this.state.league}/>
-                <PlayersTable league={this.state.league}/>
+                <DraftTable league={this.state.league}/>
             </div>
         );
     }
