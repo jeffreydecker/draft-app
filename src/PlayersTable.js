@@ -10,12 +10,27 @@ import Container from 'react-bootstrap/Container'
 import Col from 'react-bootstrap/Col'
 import Row from 'react-bootstrap/Row'
 import Search from 'react-feather/dist/icons/search';
+import RankingRow from './RankingRow'
+import HitterRow from './HitterRow';
+import PitcherRow from './PitcherRow';
 
 const columns = {
     rankings:   ['#', 'Name', 'Positions', 'Team'],
     hitting:    ['#', 'Name', 'Positions', 'Team', 'R', 'HR', 'RBI', 'AVG', 'SB'],
     pitching:   ['#', 'Name', 'Positions', 'Team', 'ERA', 'WHIP', 'K', 'W', 'S'],
 };
+
+const positions = {
+    hitting:    ['C', '1B', '2B', '3B', 'SS', 'OF', 'CF', 'LF', 'RF', 'DH'],
+    pitching:   ['SP', 'RP'],
+    outfield:   ['OF', 'CF', 'LF', 'RF'],
+}
+
+let DisplayTypeEnum = {
+    Ranking:    1,
+    Hitting:    2,
+    Pitching:   3,
+}
 
 class PlayersTable extends Component {
     state = {
@@ -35,10 +50,7 @@ class PlayersTable extends Component {
         this.onFilterDrafted = this.onFilterDrafted.bind(this);
     }
 
-    handlePlayerClick = (event) => {
-        let player = this.props.league.players.find(player => {
-            return player._player._id === event.currentTarget.dataset.player
-        })
+    handlePlayerClick = (player) => {
         this.setState({dialogOpen: true, dialogPlayer: player})
     }
 
@@ -64,14 +76,18 @@ class PlayersTable extends Component {
 
         // TODO - Add pagination and show stats when pos filter selected
 
+        var displayType = DisplayTypeEnum.Ranking
         var players = null
+        var cols = columns.rankings;
 
+        // TODO - When filtering by position, update ranking to reflect ranking within that position
         if (this.props.league) {
             players = this.props.league.players.filter((player) => {
                 let nameMatch = player._player.name.toLowerCase().includes(this.state.searchText.toLowerCase())
                 
                 let positionMatch = true
                 if (this.state.positionFilter == "Hitters") {
+                    displayType = DisplayTypeEnum.Hitting
                     positionMatch = player._player.pos.includes("C") 
                     || player._player.pos.includes("1B")
                     || player._player.pos.includes("2B")
@@ -83,14 +99,21 @@ class PlayersTable extends Component {
                     || player._player.pos.includes("RF")
                     || player._player.pos.includes("DH")
                 } else if (this.state.positionFilter == "Pitchers") {
+                    displayType = DisplayTypeEnum.Pitching
                     positionMatch = player._player.pos.includes("SP") 
                     || player._player.pos.includes("RP")
                 } else if (this.state.positionFilter == "OF") {
+                    displayType = DisplayTypeEnum.Hitting
                     positionMatch = player._player.pos.includes("OF")
                     || player._player.pos.includes("LF")
                     || player._player.pos.includes("CF")
                     || player._player.pos.includes("RF")
                 } else if (this.state.positionFilter) {
+                    if (positions.hitting.includes(this.state.positionFilter)) {
+                        displayType = DisplayTypeEnum.Hitting
+                    } else if (positions.pitching.includes(this.state.positionFilter)) {
+                        displayType = DisplayTypeEnum.Pitching
+                    }
                     positionMatch = player._player.pos.includes(this.state.positionFilter)
                 }
 
@@ -103,6 +126,13 @@ class PlayersTable extends Component {
             }).slice(0, 100)
         }
         
+        if (this.state.positionFilter == "Hitters" || positions.hitting.includes(this.state.positionFilter)) {
+            displayType = DisplayTypeEnum.Hitting
+            cols = columns.hitting
+        } else if (this.state.positionFilter == "Pitchers" || positions.pitching.includes(this.state.positionFilter)) {
+            displayType = DisplayTypeEnum.Pitching
+            cols = columns.pitching
+        }
 
         return (
             <Container>
@@ -148,21 +178,22 @@ class PlayersTable extends Component {
                 <Table responsive="sm" size="sm" striped hover>
                     <thead>
                         <tr>
-                            {columns.rankings.map(title => (
+                            {cols.map(title => (
                                 <th>{title}</th>
                             ))}
                         </tr>
                     </thead>
                     <tbody>
                         {players ? 
-                            players.map(player => (
-                                <tr key={player._id} data-player={player._player._id} onClick={this.handlePlayerClick} class={player._team ? "bg-dark" : ""}>
-                                    <td component="th" scope="row">{player._player.rank == Number.MAX_SAFE_INTEGER ? 'NA' : player._player.rank}</td>
-                                    <td>{player._player.name}</td>
-                                    <td>{player._player.pos}</td>
-                                    <td>{player._player.team}</td>
-                                </tr>
-                            ))
+                            players.map(player => {
+                                if (displayType == DisplayTypeEnum.Hitting) {
+                                    return <HitterRow player={player} handlePlayerClick={this.handlePlayerClick} />
+                                } else if (displayType == DisplayTypeEnum.Pitching) {
+                                    return <PitcherRow player={player} handlePlayerClick={this.handlePlayerClick} />
+                                } else {
+                                    return <RankingRow player={player} handlePlayerClick={this.handlePlayerClick} />
+                                }
+                            })
                             : <div>Loading</div>
                         }
                     </tbody>
