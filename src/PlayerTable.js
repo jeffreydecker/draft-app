@@ -5,6 +5,7 @@ import HitterRow from './HitterRow';
 import PitcherRow from './PitcherRow';
 
 export const columns = {
+    all:        ['#', 'Name', 'Positions', 'Team', 'R', 'HR', 'RBI', 'AVG', 'SB', 'ERA', 'WHIP', 'K', 'W', 'S'],
     rankings:   ['#', 'Name', 'Positions', 'Team'],
     hitting:    ['#', 'Name', 'Positions', 'Team', 'R', 'HR', 'RBI', 'AVG', 'SB'],
     pitching:   ['#', 'Name', 'Positions', 'Team', 'ERA', 'WHIP', 'K', 'W', 'S'],
@@ -21,6 +22,11 @@ export const DisplayTypeEnum = {
     Hitting:    2,
     Pitching:   3,
 }
+
+// TODO - Would be nice to exclude #, name, positions and team when showing in the player dialog
+// We can combine all of the rows into one then pass columns to the row and have the row know how
+// to gather the matching information for each row into an array to be displayed (entry per col)
+
 
 export class PlayerTable extends Component {
     constructor(props) {
