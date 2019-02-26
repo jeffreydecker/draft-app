@@ -6,24 +6,21 @@ import FormControl from 'react-bootstrap/FormControl'
 import InputGroup from 'react-bootstrap/InputGroup'
 import Dropdown from 'react-bootstrap/Dropdown'
 import DropdownButton from 'react-bootstrap/DropdownButton'
-import Search from 'react-feather/dist/icons/search';
-import ToggleButtonGroup from 'react-bootstrap/ToggleButtonGroup'
-import ToggleButton from 'react-bootstrap/ToggleButton'
 import Container from 'react-bootstrap/Container'
 import Col from 'react-bootstrap/Col'
 import Row from 'react-bootstrap/Row'
-import Button from 'react-bootstrap/Button';
+import Search from 'react-feather/dist/icons/search';
 
 const columns = {
-    rankings: ['#', 'Name', 'Positions', 'Team'],
-    hitting: [],
-    pitching: [],
+    rankings:   ['#', 'Name', 'Positions', 'Team'],
+    hitting:    ['#', 'Name', 'Positions', 'Team', 'R', 'HR', 'RBI', 'AVG', 'SB'],
+    pitching:   ['#', 'Name', 'Positions', 'Team', 'ERA', 'WHIP', 'K', 'W', 'S'],
 };
 
 class PlayersTable extends Component {
     state = {
-        league: null,
         dialogOpen: false,
+        dialogPlayer: null,
         searchText: "",
         positionFilter: null,
         filterDrafted: false,
@@ -39,8 +36,10 @@ class PlayersTable extends Component {
     }
 
     handlePlayerClick = (event) => {
-        console.log(`click: ${event}`)
-        this.setState({dialogOpen: true})
+        let player = this.props.league.players.find(player => {
+            return player._player._id === event.currentTarget.dataset.player
+        })
+        this.setState({dialogOpen: true, dialogPlayer: player})
     }
 
     handleDialogClose = () => {
@@ -61,20 +60,9 @@ class PlayersTable extends Component {
         this.setState({filterDrafted: event.currentTarget.checked})
     }
 
-    async componentDidMount() {
-        // var response = await fetch('https://pure-bastion-69696.herokuapp.com/api/leagues/5c6a1e6f5447a601b68f255d');
-        // const league = await response.json();
-    
-        // league.players.sort(function(a, b){return a._player.rank - b._player.rank})
-
-        // if (response.status !== 200) throw Error("Error fetching stats and rankings");
-    
-        // this.setState({league: league});
-    }
-
     render() {
 
-        // TODO - Add pagination
+        // TODO - Add pagination and show stats when pos filter selected
 
         var players = null
 
@@ -168,7 +156,7 @@ class PlayersTable extends Component {
                     <tbody>
                         {players ? 
                             players.map(player => (
-                                <tr key={player._id} player-id={player._id} onClick={this.handlePlayerClick} class={player._team ? "bg-dark" : ""}>
+                                <tr key={player._id} data-player={player._player._id} onClick={this.handlePlayerClick} class={player._team ? "bg-dark" : ""}>
                                     <td component="th" scope="row">{player._player.rank == Number.MAX_SAFE_INTEGER ? 'NA' : player._player.rank}</td>
                                     <td>{player._player.name}</td>
                                     <td>{player._player.pos}</td>
@@ -180,7 +168,11 @@ class PlayersTable extends Component {
                     </tbody>
                 </Table>
 
-                <PlayersDialog open={this.state.dialogOpen} onClose={this.handleDialogClose}/>
+                <PlayersDialog 
+                open={this.state.dialogOpen} 
+                onClose={this.handleDialogClose} 
+                player={this.state.dialogPlayer} 
+                teams={this.props.league ? this.props.league.teams : null}/>
             </Container>
         );
     }
