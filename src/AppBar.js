@@ -11,7 +11,7 @@ function AppBar(props) {
         <Navbar.Brand href="/">Navbar</Navbar.Brand>
       </LinkContainer>
       <Nav className="mr-auto">
-        <LinkContainer to={'/'}>      
+        <LinkContainer to={'/leagues'}>      
           <Nav.Link>Leagues</Nav.Link>
         </LinkContainer>
         <LinkContainer to={'/draft'}>      

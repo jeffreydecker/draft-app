@@ -71,7 +71,7 @@ class ResponsiveDialog extends React.Component {
                 <InputGroup.Prepend>
                     <InputGroup.Text><DollarSign/></InputGroup.Text>
                 </InputGroup.Prepend>
-                <FormControl type="number" onChangeCapture={this.onSearch}/>
+                <FormControl type="number"/>
               </InputGroup>            
             </Col>
           </Form.Row>

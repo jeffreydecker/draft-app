@@ -14,6 +14,7 @@ class DraftRoom extends Component {
     };
 
     async componentDidMount() {
+        console.log(`League Id: ${this.props.match.params.id}`)
         var response = await fetch('https://pure-bastion-69696.herokuapp.com/api/leagues/5c6a1e6f5447a601b68f255d');
         const league = await response.json();
     
