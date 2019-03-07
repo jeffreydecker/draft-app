@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
 import Table from 'react-bootstrap/Table'
 import Container from 'react-bootstrap/Container'
+import { LinkContainer } from 'react-router-bootstrap'
 
-const columns = ['My Leagues'];
+const columns = ['League', 'Edit'];
 
 class LeaguesTable extends Component {
     state = {
@@ -13,17 +14,16 @@ class LeaguesTable extends Component {
     constructor(props) {
         super(props);
         this.handleLeagueClick = this.handleLeagueClick.bind(this);
+        this.handleEditClick = this.handleEditClick.bind(this);
         this.handleDialogClose = this.handleDialogClose.bind(this);
     }
 
-    // TODO - Navigate to the league draft view
-    handleLeagueClick = (event) => {
-        // this.setState({dialogOpen: true})
-    }
-
-    handleDialogClose = () => {
-        // this.setState({dialogOpen: false})
-    }
+    // TODO - Do we need this with router links?
+    handleLeagueClick = (event) => {}
+    // TODO - Fill in
+    handleEditClick = (event) => {}
+    // TODO - Maybe we need a confirmation, this maybe should be a league 
+    handleDialogClose = () => {}
 
     // TODO - Add settings and delete buttons to the league table
     // Settings shows a dialog to update the league settings
@@ -42,11 +42,14 @@ class LeaguesTable extends Component {
                     <tbody>
                         {this.props.leagues ? 
                             this.props.leagues.map(league => (
-                                <tr key={league._id} team-id={league._id} onClick={this.handleLeagueClick}>
-                                    <td component="th" scope="row">{league.name}</td>
-                                </tr>
+                                <LinkContainer to={`/league/${league._id}`}>
+                                    <tr key={league._id} team-id={league._id}>
+                                        <td component="th" scope="row">{league.name}</td>
+                                        <td data-league={league} onClick={this.handleEditClick}>Edit</td>
+                                    </tr>
+                                </LinkContainer>
                             ))
-                            : <div>Loading</div>
+                            : <tr><td>Loading...</td></tr>
                         }
                     </tbody>
                 </Table>

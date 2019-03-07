@@ -24,6 +24,7 @@ class App extends Component {
         <Route exact path="/" component={Home} />
         <Route path="/leagues" component={Leagues} />
         <Route path="/draft" component={DraftRoom} />
+        <Route path="/league/:leagueId" component={DraftRoom} />
       </Switch>
       </div>
     );
