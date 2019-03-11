@@ -84,7 +84,7 @@ class PlayersTable extends Component {
                 let nameMatch = player._player.name.toLowerCase().includes(this.state.searchText.toLowerCase())
                 
                 let positionMatch = true
-                if (this.state.positionFilter == "Hitters") {
+                if (this.state.positionFilter === "Hitters") {
                     displayType = DisplayTypeEnum.Hitting
                     positionMatch = player._player.pos.includes("C") 
                     || player._player.pos.includes("1B")
@@ -96,11 +96,11 @@ class PlayersTable extends Component {
                     || player._player.pos.includes("CF")
                     || player._player.pos.includes("RF")
                     || player._player.pos.includes("DH")
-                } else if (this.state.positionFilter == "Pitchers") {
+                } else if (this.state.positionFilter === "Pitchers") {
                     displayType = DisplayTypeEnum.Pitching
                     positionMatch = player._player.pos.includes("SP") 
                     || player._player.pos.includes("RP")
-                } else if (this.state.positionFilter == "OF") {
+                } else if (this.state.positionFilter === "OF") {
                     displayType = DisplayTypeEnum.Hitting
                     positionMatch = player._player.pos.includes("OF")
                     || player._player.pos.includes("LF")
@@ -124,10 +124,10 @@ class PlayersTable extends Component {
             }).slice(0, 100)
         }
         
-        if (this.state.positionFilter == "Hitters" || positions.hitting.includes(this.state.positionFilter)) {
+        if (this.state.positionFilter === "Hitters" || positions.hitting.includes(this.state.positionFilter)) {
             displayType = DisplayTypeEnum.Hitting
             cols = columns.hitting
-        } else if (this.state.positionFilter == "Pitchers" || positions.pitching.includes(this.state.positionFilter)) {
+        } else if (this.state.positionFilter === "Pitchers" || positions.pitching.includes(this.state.positionFilter)) {
             displayType = DisplayTypeEnum.Pitching
             cols = columns.pitching
         }

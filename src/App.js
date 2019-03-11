@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import './App.css';
-import AppBar from './AppBar';
-import DraftRoom from './DraftRoom';
-import Leagues from './Leagues';
+import AppBar from './components/AppBar';
+import DraftRoom from './components/DraftRoom';
+import Leagues from './components/Leagues';
 import { Switch, Route, IndexRoute, Link, hashHistory } from 'react-router-dom'
 
 class Home extends Component {

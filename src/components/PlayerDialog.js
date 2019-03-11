@@ -1,33 +1,66 @@
 import React from 'react';
 import Modal from 'react-bootstrap/Modal'
 import Button from 'react-bootstrap/Button'
-import Form from 'react-bootstrap/Form'
-import Col from 'react-bootstrap/Col'
-import FormControl from 'react-bootstrap/FormControl'
-import InputGroup from 'react-bootstrap/InputGroup'
-import DollarSign from 'react-feather/dist/icons/dollar-sign';
+import PlayerForm from './PlayerForm'
 import { PlayerTable, DisplayTypeEnum, columns } from './PlayerTable'
 
-class ResponsiveDialog extends React.Component {
-
+class PlayerDialog extends React.Component {
   constructor(props) {
     super(props);
-    this.handleClose = this.handleClose.bind(this);
-    this.handleDraftDrop = this.handleDraftDrop.bind(this);
-    this.onTeamSelect = this.onTeamSelect.bind(this);
+
+    // No-op
     this.handlePlayerClick = this.handlePlayerClick.bind(this);
-  }  
+    // Dialog
+    this.handleClose = this.handleClose.bind(this);
+    // Api
+    this.handleDraftDrop = this.handleDraftDrop.bind(this);
+  }
 
   handleClose = () => {
+    this.setState({player: null})
     this.props.onClose();
   }
 
-  handleDraftDrop = () => {
+  handleDraftDrop = (event) => {
+    event.preventDefault()
+
+    if (this.props.player._team) {
+      // Drop the player
+      let player = this.props.player
+      this.dropPlayer(player)
+    } else {
+      let player = this.props.player
+      let team = this.props.teams.find((team) => { return team._id == event.target.elements.team.value })
+      let salary = event.target.elements.salary.value
+      this.addPlayer(player, team, salary, true)
+    }
+  }
+
+  addPlayer = async (player, team, salary, rostered) => {
+    let body = { 
+      "teamId": team._id, 
+      "salary": salary,
+      "rostered": rostered
+    }
+
+    var response = await fetch(`https://pure-bastion-69696.herokuapp.com/api/leagues/add/${player._id}`, {
+      method: 'PATCH',
+      headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(body)
+    })
+
     this.props.onClose();
   }
 
-  onTeamSelect = (teamId) => {
-    console.log(`Team Selected: ${teamId}`)
+  dropPlayer = async (player) => {
+    var response = await fetch(`https://pure-bastion-69696.herokuapp.com/api/leagues/drop/${player._id}`, {
+      method: 'PATCH',
+    })
+
+    this.props.onClose();
   }
 
   handlePlayerClick = (player) => {}
@@ -54,35 +87,11 @@ class ResponsiveDialog extends React.Component {
           <Modal.Body>
           {hittingTable}
           {pitchingTable}
-          <Form>
-          <Form.Row>
-            <Col>
-              <Form.Label>Team</Form.Label>
-              <Form.Control as="select">
-                <option>None</option>
-                {this.props.teams.map(team => (
-                  <option value={team._id} selected={this.props.player._team ? team._id == this.props.player._team : false}>{team.name}</option>
-                ))}              
-              </Form.Control>
-            </Col>
-            <Col>
-              <Form.Label>Salary</Form.Label>
-              <InputGroup >
-                <InputGroup.Prepend>
-                    <InputGroup.Text><DollarSign/></InputGroup.Text>
-                </InputGroup.Prepend>
-                <FormControl type="number"/>
-              </InputGroup>            
-            </Col>
-          </Form.Row>
-        </Form>
+          <PlayerForm player={this.props.player} teams={this.props.teams} onClose={this.handleClose}/>
           </Modal.Body>
           <Modal.Footer>
             <Button variant="secondary" onClick={this.handleClose}>
               Close
-            </Button>
-            <Button variant="primary" onClick={this.handleDraftDrop}>
-              {this.props.player._team ? "Drop" : "Draft"}
             </Button>
           </Modal.Footer>
         </Modal>
@@ -96,4 +105,4 @@ class ResponsiveDialog extends React.Component {
   }
 }
 
-export default ResponsiveDialog;
+export default PlayerDialog;
