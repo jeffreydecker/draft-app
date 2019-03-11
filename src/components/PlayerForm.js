@@ -8,9 +8,9 @@ import DollarSign from 'react-feather/dist/icons/dollar-sign';
 
 class PlayerForm extends React.Component {
   state = {
-    team: '',
-    salary: '',
-    rostered: true,
+    team: null,
+    salary: null,
+    rostered: null,
   }
 
   constructor(props) {
@@ -85,57 +85,73 @@ class PlayerForm extends React.Component {
   }
 
   onRosteredChange = (event) => {
-    // let rostered = event.target.is
+    let rostered = event.target.checked
     console.log(`RosteredChange: ${event}`)
-    // let player = this.state.player
-    // player._team = teamId
-    // this.setState({player: player})
-  }
+    this.setState({rostered: rostered})
+}
 
   handlePlayerClick = (player) => {}
 
   render() {
+    let salary = this.state.salary ? this.state.salary : this.props.player.salary
+    let team = this.state.team ? this.state.team : this.props.player._team
+    let rostered = this.state.rostered !== null ? this.state.rostered : 
+        (this.props.player.hasOwnProperty('isRostered') ? this.props.player.isRostered : true)
+
+    let formEnabled = team == null
+
     if (this.props.player) {
       return (      
         <Form onSubmit={this.handleDraftDrop}>
-        <Form.Row>
-            <Col>
-            <Form.Group controlId="team">
-            <Form.Label>Team</Form.Label>
-            <Form.Control as="select" defaultValue={this.props.player._team} value={this.state.team} onChange={this.onTeamSelect}>
-                <option>None</option>
-                {this.props.teams.map(team => (
-                <option value={team._id}>{team.name}</option>
-                ))}              
-            </Form.Control>
-            </Form.Group>
-            </Col>
-            <Col>
-            <Form.Group controlId="salary">
-            <Form.Label>Salary</Form.Label>
-            <InputGroup >
-                <InputGroup.Prepend>
-                    <InputGroup.Text><DollarSign/></InputGroup.Text>
-                </InputGroup.Prepend>
-                <FormControl type="number" defaultValue={this.props.player.salary} value={this.state.salary} onChange={this.onSalaryChange}/>
-            </InputGroup>     
-            </Form.Group>       
-            </Col>
-        </Form.Row>
+            <Form.Row>
+                <Col>
+                    <Form.Group controlId="team">
+                        <Form.Label>Team</Form.Label>
+                        <Form.Control 
+                        as="select" value={team} 
+                        disabled={!formEnabled}
+                        onChange={this.onTeamSelect}>
+                            <option>None</option>
+                            {this.props.teams.map(team => (
+                            <option value={team._id}>{team.name}</option>
+                            ))}              
+                        </Form.Control>
+                    </Form.Group>
+                </Col>
 
-        {/* <Form.Row>
-            <Form.Group>
-                <Form.Check
-                    label="Counts against roster cap"
-                    />
-            </Form.Group>
-        </Form.Row> */}
+                <Col>
+                    <Form.Group controlId="salary">
+                        <Form.Label>Salary</Form.Label>
+                        <InputGroup >
+                            <InputGroup.Prepend>
+                                <InputGroup.Text><DollarSign/></InputGroup.Text>
+                            </InputGroup.Prepend>
+                            <FormControl 
+                            type="number"                     
+                            disabled={!formEnabled}
+                            value={salary} 
+                            onChange={this.onSalaryChange}/>
+                        </InputGroup>     
+                    </Form.Group>       
+                </Col>
+            </Form.Row>
 
-        <Form.Row>
-        <Button variant="primary" type="submit">
-            {this.props.player._team ? "Drop" : "Draft"}
-            </Button>
-        </Form.Row>
+            <Form.Row>
+                <Form.Group>
+                    <Form.Check
+                        disabled={!formEnabled}
+                        checked={rostered}
+                        onChange={this.onRosteredChange}
+                        label="Counts against roster cap"
+                        />
+                </Form.Group>
+            </Form.Row>
+
+            <Form.Row>
+                <Button variant="primary" type="submit">
+                    {this.props.player._team ? "Drop" : "Draft"}
+                </Button>
+            </Form.Row>
         </Form>
       );
     } else {
