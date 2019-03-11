@@ -13,9 +13,9 @@ import Search from 'react-feather/dist/icons/search';
 import PlayerTable from './PlayerTable'
 
 const columns = {
-    rankings:   ['#', 'Name', 'Positions', 'Team'],
-    hitting:    ['#', 'Name', 'Positions', 'Team', 'R', 'HR', 'RBI', 'AVG', 'SB'],
-    pitching:   ['#', 'Name', 'Positions', 'Team', 'ERA', 'WHIP', 'K', 'W', 'S'],
+    rankings:   ['#', 'Name', 'Positions', 'Team', '$'],
+    hitting:    ['#', 'Name', 'Positions', 'Team', '$', 'R', 'HR', 'RBI', 'AVG', 'SB'],
+    pitching:   ['#', 'Name', 'Positions', 'Team', '$', 'ERA', 'WHIP', 'K', 'W', 'S'],
 };
 
 const positions = {
