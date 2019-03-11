@@ -14,9 +14,9 @@ function AppBar(props) {
         <LinkContainer to={'/leagues'}>      
           <Nav.Link>Leagues</Nav.Link>
         </LinkContainer>
-        <LinkContainer to={'/draft'}>      
+        {/* <LinkContainer to={'/draft'}>      
           <Nav.Link >Draft</Nav.Link>
-        </LinkContainer>
+        </LinkContainer> */}
       </Nav>
     </Navbar>
   );

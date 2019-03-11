@@ -14,8 +14,9 @@ class DraftRoom extends Component {
     };
 
     async componentDidMount() {
-        console.log(`League Id: ${this.props.match.params.id}`)
-        var response = await fetch('https://pure-bastion-69696.herokuapp.com/api/leagues/5c6a1e6f5447a601b68f255d');
+        let { leagueId } = this.props.match.params
+        console.log(`League Id: ${leagueId}`)
+        var response = await fetch(`https://pure-bastion-69696.herokuapp.com/api/leagues/${leagueId}`);
         const league = await response.json();
     
         league.players.sort(function(a, b){return a._player.rank - b._player.rank})
