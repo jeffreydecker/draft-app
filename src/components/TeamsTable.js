@@ -3,7 +3,7 @@ import PlayersDialog from './PlayerDialog'
 import Table from 'react-bootstrap/Table'
 import Container from 'react-bootstrap/Container'
 
-const columns = ['Name', '$ Spent', '$ Left', 'Picks Left', 'Max Bid'];
+const columns = ['Name', '$ Remaining', 'Picks Remaining', 'Max Bid', 'Avg. Bid'];
 
 class TeamsTable extends Component {
     state = {
@@ -13,11 +13,11 @@ class TeamsTable extends Component {
 
     constructor(props) {
         super(props);
-        this.handlePlayerClick = this.handlePlayerClick.bind(this);
+        this.handleTeamClick = this.handleTeamClick.bind(this);
         this.handleDialogClose = this.handleDialogClose.bind(this);
     }
 
-    handlePlayerClick = (event) => {
+    handleTeamClick = (event) => {
         this.setState({dialogOpen: true})
     }
 
@@ -25,18 +25,40 @@ class TeamsTable extends Component {
         this.setState({dialogOpen: false})
     }
 
-    async componentDidMount() {
-        // var response = await fetch('https://pure-bastion-69696.herokuapp.com/api/leagues/5c6a1e6f5447a601b68f255d');
-        // const league = await response.json();
-    
-        // league.players.sort(function(a, b){return a._player.rank - b._player.rank})
-
-        // if (response.status !== 200) throw Error("Error fetching stats and rankings");
-    
-        // this.setState({league: league});
-    }
-
     render() {
+        var rows = []
+        if (this.props.league) {
+            const that = this
+            this.props.league.teams.forEach(team => {
+                var spent = 0
+                var picks = 0
+                team.players.forEach(playerId => {
+                    let player = that.props.league.players.find(p => {
+                        return p._id === playerId
+                    })
+                    spent += player.salary
+                    if (player.isRostered) {
+                        picks += 1
+                    }
+                });
+    
+                var moneyRemaining = this.props.league.budget - spent
+                var picksRemaining = this.props.league.rosterSize - picks
+                var maxBid = moneyRemaining - picksRemaining - 1
+                var avgBid = moneyRemaining / picksRemaining
+    
+                rows.push((
+                    <tr key={team._id} team-id={team._id} onClick={this.handleTeamClick}>
+                        <td component="th" scope="row">{team.name}</td>
+                        <td>{moneyRemaining} of {this.props.league.budget}</td>
+                        <td>{picksRemaining} of {this.props.league.rosterSize}</td>
+                        <td>{maxBid}</td>
+                        <td>{avgBid.toFixed(2)}</td>
+                    </tr>
+                ))
+            });
+        }
+        
         return (
             <Container>
                 <Table responsive="sm" size="sm" striped hover>
@@ -48,17 +70,10 @@ class TeamsTable extends Component {
                         </tr>
                     </thead>
                     <tbody>
-                        {this.props.league ? 
-                            this.props.league.teams.map(team => (
-                                <tr key={team._id} team-id={team._id} onClick={this.handlePlayerClick}>
-                                    <td component="th" scope="row">{team.name}</td>
-                                    <td>0 of {this.props.league.budget}</td>
-                                    <td>{this.props.league.budget} of {this.props.league.budget}</td>
-                                    <td>{this.props.league.rosterSize - team.players.length}</td>
-                                    <td>?</td>
-                                </tr>
+                        {
+                            rows.map(team => (
+                                team
                             ))
-                            : <div>Loading</div>
                         }
                     </tbody>
                 </Table>

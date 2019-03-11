@@ -35,7 +35,8 @@ class PlayerForm extends React.Component {
             let player = this.props.player
             let team = this.props.teams.find((team) => { return team._id == event.target.elements.team.value })
             let salary = event.target.elements.salary.value
-            this.addPlayer(player, team, salary, true)
+            let rostered = this.state.rostered
+            this.addPlayer(player, team, salary, rostered)
         }
     }
 
@@ -84,13 +85,23 @@ class PlayerForm extends React.Component {
         this.setState({ rostered: rostered })
     }
 
-    render() {
-        let salary = this.state.salary ? this.state.salary : this.props.player.salary
-        let team = this.state.team ? this.state.team : this.props.player._team
-        let rostered = this.state.rostered !== null ? this.state.rostered :
-            (this.props.player.hasOwnProperty('isRostered') ? this.props.player.isRostered : true)
+    componentDidMount() {
+        if (this.props.player) {
+            this.setState({
+                team: this.props.player._team,
+                salary: this.props.player.salary,
+                rostered: this.props.player.isRostered,
+            })
+        }
+    }
 
-        let formEnabled = team == null
+    render() {
+        let salary = this.state.salary
+        let team = this.state.team
+        let rostered = this.state.rostered
+
+        // Use props player here instead of state to reflect the correct current action
+        let formEnabled = this.props.player._team == null
 
         if (this.props.player) {
             return (
@@ -141,7 +152,7 @@ class PlayerForm extends React.Component {
 
                     <Form.Row>
                         <Button variant="primary" type="submit">
-                            {this.props.player._team ? "Drop" : "Draft"}
+                            {!formEnabled ? "Drop" : "Draft"}
                         </Button>
                     </Form.Row>
                 </Form>

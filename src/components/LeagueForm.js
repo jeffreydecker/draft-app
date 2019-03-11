@@ -31,7 +31,6 @@ class LeagueForm extends Component {
     onSubmit = async (event) => {
         event.preventDefault()
 
-        // TODO - Fill in from form values
         let league = {
             name: this.state.name,
             teamCount: this.state.teams,
@@ -59,15 +58,16 @@ class LeagueForm extends Component {
         })
         // }
 
-        if (response.status !== 200) throw Error("Error submitting league");
+        if (response.status !== 200) {
+            alert("Error submitting league")
+            return
+        }
 
         var leagues = await response.json();
         console.log(`Leagues: ${leagues}`)
-
-        // TODO - Clear the form
-        event.target.reset()
-
-        // TODO - Push the response up to the parent
+        this.onCancel()
+        // TODO - Do better than a reload
+        window.location.reload()
     }
 
     // TODO - Delete the leaue
@@ -117,10 +117,10 @@ class LeagueForm extends Component {
             clearBtn = <Button variant="secondary" type="button">Cancel</Button>
             deleteBtn = <Button variant="error" type="button">Delete</Button>
         } else {
-            let submitDisabled = this.state.name === null
-                || this.state.rosterSize === null
-                || this.state.budget === null
-                || this.state.teams === null
+            let submitDisabled = this.state.name === ''
+                || this.state.rosterSize === ''
+                || this.state.budget === ''
+                || this.state.teams === ''
 
             submitBtn = <Button variant="primary" type="submit" disabled={submitDisabled}>Create</Button>
             clearBtn = <Button variant="secondary" type="reset">Clear</Button>

@@ -21,7 +21,10 @@ class LeaguesTable extends Component {
     // TODO - Do we need this with router links?
     handleLeagueClick = (event) => {}
     // TODO - Fill in
-    handleEditClick = (event) => {}
+    handleEditClick = (event) => {
+        alert("Edit Click")
+        event.preventDefault()
+    }
     // TODO - Maybe we need a confirmation, this maybe should be a league 
     handleDialogClose = () => {}
 
@@ -42,12 +45,13 @@ class LeaguesTable extends Component {
                     <tbody>
                         {this.props.leagues ? 
                             this.props.leagues.map(league => (
-                                <LinkContainer to={`/league/${league._id}`}>
                                     <tr key={league._id} team-id={league._id}>
-                                        <td component="th" scope="row">{league.name}</td>
+                                        <LinkContainer to={`/league/${league._id}`}>
+                                            <td component="th" scope="row">{league.name}</td>
+                                        </LinkContainer>
                                         <td data-league={league} onClick={this.handleEditClick}>Edit</td>
                                     </tr>
-                                </LinkContainer>
+                                
                             ))
                             : <tr><td>Loading...</td></tr>
                         }
