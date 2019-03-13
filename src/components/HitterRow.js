@@ -17,7 +17,7 @@ class HitterRow extends Component {
                 <td>{player._player.hittingProjections.runs}</td>
                 <td>{player._player.hittingProjections.homeRuns}</td>
                 <td>{player._player.hittingProjections.rbi}</td>
-                <td>{player._player.hittingProjections.average}</td>
+                <td>{player._player.hittingProjections.average.toFixed(3)}</td>
                 <td>{player._player.hittingProjections.steals}</td>
             </tr>
         );

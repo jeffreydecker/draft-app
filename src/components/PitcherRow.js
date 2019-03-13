@@ -1,6 +1,11 @@
 import React, { Component } from 'react';
 
 class PitcherRow extends Component {
+    constructor(props) {
+        super(props)
+        this.handlePlayerClick = this.handlePlayerClick.bind(this)
+    }
+
     handlePlayerClick = (event) => {
         this.props.handlePlayerClick(this.props.player)
     }
@@ -14,8 +19,8 @@ class PitcherRow extends Component {
                 <td>{player._player.pos}</td>
                 <td>{player._player.team}</td>
                 <td>{player.salary}</td>
-                <td>{player._player.pitchingProjections.era}</td>
-                <td>{player._player.pitchingProjections.whip}</td>
+                <td>{player._player.pitchingProjections.era.toFixed(2)}</td>
+                <td>{player._player.pitchingProjections.whip.toFixed(2)}</td>
                 <td>{player._player.pitchingProjections.strikeouts}</td>
                 <td>{player._player.pitchingProjections.wins}</td>
                 <td>{player._player.pitchingProjections.saves}</td>

@@ -5,10 +5,12 @@ import HitterRow from './HitterRow';
 import PitcherRow from './PitcherRow';
 
 export const columns = {
-    all:        ['#', 'Name', 'Positions', 'Team', 'R', 'HR', 'RBI', 'AVG', 'SB', 'ERA', 'WHIP', 'K', 'W', 'S'],
-    rankings:   ['#', 'Name', 'Positions', 'Team'],
-    hitting:    ['#', 'Name', 'Positions', 'Team', 'R', 'HR', 'RBI', 'AVG', 'SB'],
-    pitching:   ['#', 'Name', 'Positions', 'Team', 'ERA', 'WHIP', 'K', 'W', 'S'],
+    all:            ['#', 'Name', 'Positions', 'Team', '$', 'R', 'HR', 'RBI', 'AVG', 'SB', 'ERA', 'WHIP', 'K', 'W', 'S'],
+    rankings:       ['#', 'Name', 'Positions', 'Team', '$'],
+    hitting:        ['#', 'Name', 'Positions', 'Team', '$', 'R', 'HR', 'RBI', 'AVG', 'SB'],
+    hittingStats:   ['R', 'HR', 'RBI', 'AVG', 'SB'],
+    pitching:       ['#', 'Name', 'Positions', 'Team', '$', 'ERA', 'WHIP', 'K', 'W', 'S'],
+    pitchingStats:  ['ERA', 'WHIP', 'K', 'W', 'S'],
 };
 
 export const positions = {

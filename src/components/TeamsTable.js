@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
-import PlayersDialog from './PlayerDialog'
 import Table from 'react-bootstrap/Table'
 import Container from 'react-bootstrap/Container'
+import TeamDialog from './TeamDialog';
+import TeamRow from './TeamRow';
 
 const columns = ['Name', '$ Remaining', 'Picks Remaining', 'Max Bid', 'Avg. Bid'];
 
@@ -9,6 +10,7 @@ class TeamsTable extends Component {
     state = {
         league: null,
         dialogOpen: false,
+        dialogTeam: null,
     };
 
     constructor(props) {
@@ -17,67 +19,39 @@ class TeamsTable extends Component {
         this.handleDialogClose = this.handleDialogClose.bind(this);
     }
 
-    handleTeamClick = (event) => {
-        this.setState({dialogOpen: true})
+    handleTeamClick = (team) => {
+        this.setState({dialogOpen: true, dialogTeam: team})
     }
 
     handleDialogClose = () => {
-        this.setState({dialogOpen: false})
+        this.setState({dialogOpen: false, dialogTeam: null})
     }
 
     render() {
         var rows = []
+        var dialog = null
+
         if (this.props.league) {
-            const that = this
-            this.props.league.teams.forEach(team => {
-                var spent = 0
-                var picks = 0
-                team.players.forEach(playerId => {
-                    let player = that.props.league.players.find(p => {
-                        return p._id === playerId
-                    })
-                    spent += player.salary
-                    if (player.isRostered) {
-                        picks += 1
-                    }
-                });
-    
-                var moneyRemaining = this.props.league.budget - spent
-                var picksRemaining = this.props.league.rosterSize - picks
-                var maxBid = moneyRemaining - picksRemaining - 1
-                var avgBid = moneyRemaining / picksRemaining
-    
+            this.props.league.teams.forEach(team => {    
                 rows.push((
-                    <tr key={team._id} team-id={team._id} onClick={this.handleTeamClick}>
-                        <td component="th" scope="row">{team.name}</td>
-                        <td>{moneyRemaining} of {this.props.league.budget}</td>
-                        <td>{picksRemaining} of {this.props.league.rosterSize}</td>
-                        <td>{maxBid}</td>
-                        <td>{avgBid.toFixed(2)}</td>
-                    </tr>
+                    <TeamRow team={team} league={this.props.league} onClick={this.handleTeamClick} />
                 ))
             });
+
+            dialog = <TeamDialog open={this.state.dialogOpen} team={this.state.dialogTeam} players={this.props.league.players} onClose={this.handleDialogClose}/>
         }
         
         return (
             <Container>
                 <Table responsive="sm" size="sm" striped hover>
                     <thead>
-                        <tr>
-                            {columns.map((title, index) => (
-                                <th>{title}</th>
-                            ))}
-                        </tr>
+                        <tr>{columns.map((title, index) => (<th>{title}</th>))}</tr>
                     </thead>
                     <tbody>
-                        {
-                            rows.map(team => (
-                                team
-                            ))
-                        }
+                        {rows.map(team => (team))}
                     </tbody>
                 </Table>
-                <PlayersDialog open={this.state.dialogOpen} onClose={this.handleDialogClose}/>
+                {dialog}
             </Container>
         );
     }
