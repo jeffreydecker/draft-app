@@ -12,11 +12,17 @@ class PlayerDialog extends React.Component {
     this.handlePlayerClick = this.handlePlayerClick.bind(this);
     // Dialog
     this.handleClose = this.handleClose.bind(this);
+    this.handleCloseAndUpdate = this.handleCloseAndUpdate.bind(this);
   }
 
   handleClose = () => {
     this.setState({ player: null })
     this.props.onClose();
+  }
+
+  handleCloseAndUpdate = () => {
+    this.setState({ player: null })
+    this.props.onCloseAndUpdate();
   }
 
   handlePlayerClick = (player) => { }
@@ -43,7 +49,7 @@ class PlayerDialog extends React.Component {
           <Modal.Body>
             {hittingTable}
             {pitchingTable}
-            <PlayerForm player={this.props.player} teams={this.props.teams} onClose={this.handleClose} />
+            <PlayerForm player={this.props.player} teams={this.props.teams} onClose={this.handleCloseAndUpdate} />
           </Modal.Body>
           <Modal.Footer>
             <Button variant="secondary" onClick={this.handleClose}>

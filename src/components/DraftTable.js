@@ -11,7 +11,7 @@ import Row from 'react-bootstrap/Row'
 import Search from 'react-feather/dist/icons/search';
 import { PlayerTable, columns, positions, DisplayTypeEnum } from './PlayerTable'
 
-class PlayersTable extends Component {
+class DraftTable extends Component {
     state = {
         dialogOpen: false,
         dialogPlayer: null,
@@ -35,6 +35,11 @@ class PlayersTable extends Component {
 
     handleDialogClose = () => {
         this.setState({ dialogOpen: false, dialogPlayer: null })
+    }
+
+    handleDialogCloseAndUpdate = () => {
+        this.setState({ dialogOpen: false, dialogPlayer: null })
+        this.props.refresh()
     }
 
     onSearch = (event) => {
@@ -159,6 +164,7 @@ class PlayersTable extends Component {
                 <PlayersDialog
                     open={this.state.dialogOpen}
                     onClose={this.handleDialogClose}
+                    onCloseAndUpdate={this.handleDialogCloseAndUpdate}
                     player={this.state.dialogPlayer}
                     teams={this.props.league ? this.props.league.teams : null} />
             </Container>
@@ -166,4 +172,4 @@ class PlayersTable extends Component {
     }
 }
 
-export default PlayersTable;
+export default DraftTable;

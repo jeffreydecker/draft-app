@@ -13,7 +13,17 @@ class DraftRoom extends Component {
         league: null,
     };
 
+    constructor(props) {
+        super(props)
+
+        this.refresh = this.refresh.bind(this)
+    }
+
     async componentDidMount() {
+        await this.refresh()
+    }
+
+    refresh = async() => {
         let { leagueId } = this.props.match.params
         console.log(`League Id: ${leagueId}`)
         var response = await fetch(`https://pure-bastion-69696.herokuapp.com/api/leagues/${leagueId}`);
@@ -30,7 +40,7 @@ class DraftRoom extends Component {
         return (
             <div>
                 <TeamsTable league={this.state.league}/>
-                <DraftTable league={this.state.league}/>
+                <DraftTable league={this.state.league} refresh={this.refresh}/>
             </div>
         );
     }
