@@ -37,7 +37,9 @@ class TeamsTable extends Component {
                     <TeamRow team={team} league={this.props.league} onClick={this.handleTeamClick} />
                 ))
             });
+        }
 
+        if (this.state.dialogTeam) {
             dialog = <TeamDialog open={this.state.dialogOpen} team={this.state.dialogTeam} players={this.props.league.players} onClose={this.handleDialogClose}/>
         }
         

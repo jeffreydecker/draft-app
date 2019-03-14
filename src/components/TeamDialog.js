@@ -2,10 +2,10 @@ import React from 'react';
 import Modal from 'react-bootstrap/Modal'
 import Button from 'react-bootstrap/Button'
 import FormControl from 'react-bootstrap/FormControl'
-import InputGroup from 'react-bootstrap/InputGroup'
 import Edit from 'react-feather/dist/icons/edit';
 import Save from 'react-feather/dist/icons/save';
 import { PlayerTable, DisplayTypeEnum, columns, positions } from './PlayerTable'
+import PositionsTable from './PositionsTable';
 
 class TeamDialog extends React.Component {
   state = {
@@ -31,12 +31,40 @@ class TeamDialog extends React.Component {
 
   handlePlayerClick = (player) => { }
 
-  onEditOrSaveClick = (event) => {
+  onEditOrSaveClick = async (event) => {
     // TODO - Logic to save team name
-    this.setState({
-      editingTeam: !this.state.editingTeam,
-      formName: this.props.team.name
-    })
+
+    if (this.state.editingTeam) {
+      var body = {
+        team: {
+          name: this.state.formName
+        }
+      }
+
+      let res = await fetch(`https://pure-bastion-69696.herokuapp.com/api/teams/${this.state.team._id}`, {
+        method: 'PUT',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(body)
+      })
+
+      console.log(res)
+
+      let team = await res.json()
+
+      this.setState({
+        editingTeam: !this.state.editingTeam,
+        formName: null,
+        team: team
+      })
+    } else {
+      this.setState({
+        editingTeam: !this.state.editingTeam,
+        formName: this.state.team.name
+      })
+    }
   }
 
   onNameChange = (event) => {
@@ -44,8 +72,16 @@ class TeamDialog extends React.Component {
     this.setState({ formName: event.target.value })
   }
 
+  componentDidMount() {
+    if (this.props.team) {
+        this.setState({
+            team: this.props.team
+        })
+    }
+  }
+
   render() {
-    let team = this.props.team
+    let team = this.state.team
     let players = this.props.players
 
     if (!team) {
@@ -77,6 +113,7 @@ class TeamDialog extends React.Component {
       })
     })
 
+    var teamPlayers = hitters.concat(pitchers)
     hitters.sort(function (a, b) { return a._player.rank - b._player.rank })
     pitchers.sort(function (a, b) { return a._player.rank - b._player.rank })
 
@@ -85,13 +122,13 @@ class TeamDialog extends React.Component {
     let pitchingTable = <PlayerTable cols={columns.pitching} players={pitchers} displayType={DisplayTypeEnum.Pitching} handlePlayerClick={this.handlePlayerClick} />
 
     var title = <Modal.Title>{team.name}</Modal.Title>
-    var editButton = <Button><Edit title="Edit Name" onClick={this.onEditOrSaveClick} /></Button>
+    var editButton = <Button className="bg-transparent border-0 text-primary"><Edit title="Edit Name" onClick={this.onEditOrSaveClick} /></Button>
 
     if (this.state.editingTeam) {
       title = <FormControl
         value={this.state.formName}
         onChange={this.onNameChange} />
-      var editButton = <Button><Save onClick={this.onEditOrSaveClick} /></Button>
+      var editButton = <Button className="bg-transparent border-0 text-primary"><Save onClick={this.onEditOrSaveClick} /></Button>
     }
 
     return (
@@ -101,6 +138,8 @@ class TeamDialog extends React.Component {
           {editButton}
         </Modal.Header>
         <Modal.Body>
+          <h5>Positions</h5>
+          <PositionsTable players={teamPlayers} />
           <h5>Hitters</h5>
           {hittingTable}
           <h5>Pitchers</h5>

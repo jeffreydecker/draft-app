@@ -17,6 +17,7 @@ export const positions = {
     hitting:    ['C', '1B', '2B', '3B', 'SS', 'OF', 'CF', 'LF', 'RF', 'DH'],
     pitching:   ['SP', 'RP'],
     outfield:   ['OF', 'CF', 'LF', 'RF'],
+    team:       ['C', '1B', '2B', '3B', 'SS', 'OF', 'DH', 'SP', 'RP'],
 }
 
 export const DisplayTypeEnum = {

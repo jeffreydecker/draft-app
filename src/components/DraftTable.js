@@ -63,37 +63,37 @@ class PlayersTable extends Component {
         if (this.props.league) {
             players = this.props.league.players.filter((player) => {
                 let nameMatch = player._player.name.toLowerCase().includes(this.state.searchText.toLowerCase())
-
+                var pos = player._player.pos.split(String.fromCharCode(160))[0].split(',')
                 let positionMatch = true
                 if (this.state.positionFilter === "Hitters") {
                     displayType = DisplayTypeEnum.Hitting
-                    positionMatch = player._player.pos.includes("C")
-                        || player._player.pos.includes("1B")
-                        || player._player.pos.includes("2B")
-                        || player._player.pos.includes("3B")
-                        || player._player.pos.includes("SS")
-                        || player._player.pos.includes("OF")
-                        || player._player.pos.includes("LF")
-                        || player._player.pos.includes("CF")
-                        || player._player.pos.includes("RF")
-                        || player._player.pos.includes("DH")
+                    positionMatch = pos.includes("C")
+                        || pos.includes("1B")
+                        || pos.includes("2B")
+                        || pos.includes("3B")
+                        || pos.includes("SS")
+                        || pos.includes("OF")
+                        || pos.includes("LF")
+                        || pos.includes("CF")
+                        || pos.includes("RF")
+                        || pos.includes("DH")
                 } else if (this.state.positionFilter === "Pitchers") {
                     displayType = DisplayTypeEnum.Pitching
-                    positionMatch = player._player.pos.includes("SP")
-                        || player._player.pos.includes("RP")
+                    positionMatch = pos.includes("SP")
+                        || pos.includes("RP")
                 } else if (this.state.positionFilter === "OF") {
                     displayType = DisplayTypeEnum.Hitting
-                    positionMatch = player._player.pos.includes("OF")
-                        || player._player.pos.includes("LF")
-                        || player._player.pos.includes("CF")
-                        || player._player.pos.includes("RF")
+                    positionMatch = pos.includes("OF")
+                        || pos.includes("LF")
+                        || pos.includes("CF")
+                        || pos.includes("RF")
                 } else if (this.state.positionFilter) {
                     if (positions.hitting.includes(this.state.positionFilter)) {
                         displayType = DisplayTypeEnum.Hitting
                     } else if (positions.pitching.includes(this.state.positionFilter)) {
                         displayType = DisplayTypeEnum.Pitching
                     }
-                    positionMatch = player._player.pos.includes(this.state.positionFilter)
+                    positionMatch = pos.includes(this.state.positionFilter)
                 }
 
                 var showIfDrafted = true

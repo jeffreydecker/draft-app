@@ -7,6 +7,7 @@ class HitterRow extends Component {
 
     render() {
         let player = this.props.player
+
         return (
             <tr key={player._id} data-player={player._player._id} onClick={this.handlePlayerClick} className={player._team ? "bg-dark text-white" : ""}>
                 <td component="th" scope="row">{player._player.rank == Number.MAX_SAFE_INTEGER ? 'NA' : player._player.rank}</td>
@@ -14,11 +15,11 @@ class HitterRow extends Component {
                 <td>{player._player.pos}</td>
                 <td>{player._player.team}</td>
                 <td>{player.salary}</td>
-                <td>{player._player.hittingProjections.runs}</td>
-                <td>{player._player.hittingProjections.homeRuns}</td>
-                <td>{player._player.hittingProjections.rbi}</td>
-                <td>{player._player.hittingProjections.average.toFixed(3)}</td>
-                <td>{player._player.hittingProjections.steals}</td>
+                <td>{player._player.hittingProjections ? player._player.hittingProjections.runs : "NA"}</td>
+                <td>{player._player.hittingProjections ? player._player.hittingProjections.homeRuns : "NA"}</td>
+                <td>{player._player.hittingProjections ? player._player.hittingProjections.rbi : "NA"}</td>
+                <td>{player._player.hittingProjections ? player._player.hittingProjections.average.toFixed(3) : "NA"}</td>
+                <td>{player._player.hittingProjections ? player._player.hittingProjections.steals : "NA"}</td>
             </tr>
         );
     }
