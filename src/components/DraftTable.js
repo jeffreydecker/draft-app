@@ -51,17 +51,17 @@ class DraftTable extends Component {
     }
 
     onSearch = (event) => {
-        this.setState({ searchText: event.currentTarget.value })
+        this.setState({ searchText: event.currentTarget.value, page: 0 })
     }
 
     onPositionSelect = (event) => {
         console.log(`Filter Position: ${event}`)
-        this.setState({ positionFilter: event })
+        this.setState({ positionFilter: event, page: 0 })
     }
 
     onFilterDrafted = (event) => {
         console.log(`Filter Drafted: ${event}`)
-        this.setState({ filterDrafted: event.currentTarget.checked })
+        this.setState({ filterDrafted: event.currentTarget.checked, page: 0 })
     }
 
     onPageUp = (event) => {
