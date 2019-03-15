@@ -8,11 +8,17 @@ import DropdownButton from 'react-bootstrap/DropdownButton'
 import Container from 'react-bootstrap/Container'
 import Col from 'react-bootstrap/Col'
 import Row from 'react-bootstrap/Row'
-import Search from 'react-feather/dist/icons/search';
+import Search from 'react-feather/dist/icons/search'
+import ChevRight from 'react-feather/dist/icons/chevron-right'
+import ChevLeft from 'react-feather/dist/icons/chevron-left'
 import { PlayerTable, columns, positions, DisplayTypeEnum } from './PlayerTable'
+import Button from 'react-bootstrap/Button';
+
+const PAGE_SIZE = 100
 
 class DraftTable extends Component {
     state = {
+        page: 0,
         dialogOpen: false,
         dialogPlayer: null,
         searchText: "",
@@ -27,6 +33,8 @@ class DraftTable extends Component {
         this.onSearch = this.onSearch.bind(this);
         this.onPositionSelect = this.onPositionSelect.bind(this);
         this.onFilterDrafted = this.onFilterDrafted.bind(this);
+        this.onPageUp = this.onPageUp.bind(this)
+        this.onPageDown = this.onPageDown.bind(this)
     }
 
     handlePlayerClick = (player) => {
@@ -56,6 +64,14 @@ class DraftTable extends Component {
         this.setState({ filterDrafted: event.currentTarget.checked })
     }
 
+    onPageUp = (event) => {
+        this.setState({ page: this.state.page + 1 })
+    }
+
+    onPageDown = (event) => {
+        this.setState({ page: this.state.page - 1 })
+    }
+
     render() {
 
         // TODO - Add pagination and show stats when pos filter selected
@@ -63,6 +79,7 @@ class DraftTable extends Component {
         var displayType = DisplayTypeEnum.Ranking
         var players = []
         var cols = columns.rankings;
+        var totalPages = 1;
 
         // TODO - When filtering by position, update ranking to reflect ranking within that position
         if (this.props.league) {
@@ -107,7 +124,11 @@ class DraftTable extends Component {
                 }
 
                 return nameMatch && positionMatch && showIfDrafted
-            }).slice(0, 100)
+            })
+
+            totalPages = Math.ceil(players.length / PAGE_SIZE)
+
+            players = players.slice(this.state.page * PAGE_SIZE, (this.state.page + 1) * PAGE_SIZE)
         }
 
         if (this.state.positionFilter === "Hitters" || positions.hitting.includes(this.state.positionFilter)) {
@@ -157,6 +178,12 @@ class DraftTable extends Component {
                     <Col md="4" xs="6">
                         <Form.Check bsPrefix="form-check flex-fill mt-2" type="checkbox" label="Hide Drafted Players" onChangeCapture={this.onFilterDrafted} />
                     </Col>
+                </Row>
+
+                <Row>
+                    <Button variant="secondary" onClick={this.onPageDown} disabled={this.state.page === 0}><ChevLeft /></Button>
+                    <Col lg="auto" xs="auto" >{`${this.state.page + 1} of ${totalPages}`}</Col>
+                    <Button variant="secondary" onClick={this.onPageUp} disabled={this.state.page === totalPages - 1}><ChevRight /></Button>
                 </Row>
 
                 <PlayerTable cols={cols} players={players} displayType={displayType} handlePlayerClick={this.handlePlayerClick} />
